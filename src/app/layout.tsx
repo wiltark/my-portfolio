@@ -1,37 +1,21 @@
 import type { Metadata } from "next";
-import { Geist, Geist_Mono } from "next/font/google";
+import { Inter } from "next/font/google";
 import "./globals.css";
+import { Providers } from "@/components/providers";
 
-const geistSans = Geist({
-  variable: "--font-geist-sans",
-  subsets: ["latin"],
-});
-
-const geistMono = Geist_Mono({
-  variable: "--font-geist-mono",
-  subsets: ["latin"],
-});
+const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: "Karl Portfolio",
-  description: "Portfolio de Karl - Développeur Full Stack & Designer",
+  title: { default: "Karl — Développeur Full Stack", template: "%s | Karl" },
+  description: "Portfolio de Karl — Développeur Full Stack, créateur de Veko.js et CosmoChat.",
+  icons: { icon: "/78685616.png" },
 };
 
-export default function RootLayout({
-  children,
-}: Readonly<{
-  children: React.ReactNode;
-}>) {
+export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr">
-      <head>
-        <link rel="icon" href="/78685616.png" />
-
-      </head>
-      <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
-        {children}
+    <html lang="fr" className="dark" suppressHydrationWarning>
+      <body className={`${inter.variable} font-sans antialiased bg-[#0a0a0f] text-slate-200`}>
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
