@@ -4,7 +4,7 @@ generator client {
 
 datasource db {
   provider = "mysql"
-  url      = env("DATABASE_URL")
+  url      = "mysql://mysql:e4083b41facf7745ca193651ba2fdf4c@31.185.105.25:30904/my-portfolio"
 }
 
 model Profile {

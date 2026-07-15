@@ -1,9 +1,9 @@
 "use client";
 
 import { useState, useEffect, useRef } from "react";
-import { Input } from "@heroui/react";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
+import { MagnifyingGlass, CircleNotch } from "@phosphor-icons/react";
 
 interface SearchResult {
   id: string;
@@ -63,44 +63,41 @@ export function SearchInput({ type = "all", placeholder = "Rechercher..." }: Pro
 
   return (
     <div className="relative w-full">
-      <Input
-        value={query}
-        onValueChange={setQuery}
-        onFocus={() => results.length > 0 && setOpen(true)}
-        onBlur={() => setTimeout(() => setOpen(false), 150)}
-        placeholder={placeholder}
-        classNames={{
-          input: "bg-transparent text-slate-200 placeholder:text-slate-500",
-          inputWrapper:
-            "bg-white/5 border-white/10 hover:border-white/20 focus-within:border-indigo-500",
-        }}
-        startContent={
-          <span className="text-slate-500 text-sm">
-            {loading ? "⏳" : "🔍"}
-          </span>
-        }
-        onKeyDown={(e) => {
-          if (e.key === "Enter" && query.trim()) {
-            router.push(`/search?q=${encodeURIComponent(query)}&type=${type}`);
-            setOpen(false);
-          }
-        }}
-      />
+      <div className="flex items-center gap-2.5 px-4 h-11 rounded-full border border-white/[0.09] bg-white/[0.03] focus-within:border-lime-300/40 transition-colors duration-200">
+        {loading
+          ? <CircleNotch size={15} className="text-zinc-500 animate-spin shrink-0" />
+          : <MagnifyingGlass size={15} className="text-zinc-500 shrink-0" />}
+        <input
+          type="search"
+          value={query}
+          onChange={(e) => setQuery(e.target.value)}
+          onFocus={() => results.length > 0 && setOpen(true)}
+          onBlur={() => setTimeout(() => setOpen(false), 150)}
+          placeholder={placeholder}
+          className="flex-1 min-w-0 bg-transparent text-sm text-zinc-200 placeholder:text-zinc-600 outline-none"
+          onKeyDown={(e) => {
+            if (e.key === "Enter" && query.trim()) {
+              router.push(`/search?q=${encodeURIComponent(query)}&type=${type}`);
+              setOpen(false);
+            }
+          }}
+        />
+      </div>
 
       {open && results.length > 0 && (
-        <div className="absolute top-full mt-2 w-full z-50 glass rounded-xl overflow-hidden shadow-xl">
+        <div className="absolute top-full mt-2 w-full z-50 rounded-2xl overflow-hidden border border-white/[0.09] bg-[#101012] shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
           {results.map((r) => (
             <NextLink
               key={r.id}
               href={typeHref(r)}
-              className="flex items-start gap-3 px-4 py-3 hover:bg-white/5 transition-colors border-b border-white/5 last:border-0"
+              className="flex items-start gap-3 px-4 py-3 hover:bg-white/[0.04] transition-colors border-b border-white/[0.05] last:border-0"
             >
-              <span className="text-xs bg-indigo-500/20 text-indigo-300 px-2 py-0.5 rounded mt-0.5 shrink-0">
+              <span className="text-[11px] font-medium text-lime-300 border border-lime-300/25 px-2 py-0.5 rounded-full mt-0.5 shrink-0">
                 {typeLabel[r.type]}
               </span>
-              <div>
-                <p className="text-sm font-medium text-slate-200">{r.title}</p>
-                <p className="text-xs text-slate-500 line-clamp-1">{r.excerpt}</p>
+              <div className="min-w-0">
+                <p className="text-sm font-medium text-zinc-100 truncate">{r.title}</p>
+                <p className="text-xs text-zinc-500 line-clamp-1">{r.excerpt}</p>
               </div>
             </NextLink>
           ))}
@@ -108,7 +105,7 @@ export function SearchInput({ type = "all", placeholder = "Rechercher..." }: Pro
       )}
 
       {open && results.length === 0 && query.trim() && !loading && (
-        <div className="absolute top-full mt-2 w-full z-50 glass rounded-xl px-4 py-3 text-sm text-slate-500">
+        <div className="absolute top-full mt-2 w-full z-50 rounded-2xl border border-white/[0.09] bg-[#101012] px-4 py-3 text-sm text-zinc-500 shadow-[0_20px_50px_rgba(0,0,0,0.6)]">
           Aucun résultat pour &quot;{query}&quot;
         </div>
       )}

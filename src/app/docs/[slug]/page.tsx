@@ -3,7 +3,7 @@ import { Prisma } from "@prisma/client";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import NextLink from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Hash, FileText, Clock } from "lucide-react";
+import { ArrowLeft, Clock } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 
 interface Props { params: Promise<{ slug: string }> }
@@ -26,61 +26,40 @@ export default async function DocSlugPage({ params }: Props) {
   } catch { notFound(); }
   if (!page) notFound();
 
-  // Estimate reading time
   const words = (page.content ?? "").split(/\s+/).length;
   const readMin = Math.max(1, Math.round(words / 200));
 
   return (
     <>
-      {/* Mobile back */}
+      {/* Retour mobile */}
       <div className="lg:hidden mb-8">
         <NextLink href="/docs"
-          className="inline-flex items-center gap-2 text-xs text-zinc-600 hover:text-zinc-300 transition-colors group">
-          <ArrowLeft size={12} strokeWidth={1.75} className="group-hover:-translate-x-0.5 transition-transform" />
+          className="inline-flex items-center gap-2 text-xs text-zinc-500 hover:text-lime-300 transition-colors group">
+          <ArrowLeft size={12} className="group-hover:-translate-x-0.5 transition-transform" />
           Documentation
         </NextLink>
       </div>
 
-      {/* Breadcrumb + meta */}
+      {/* Fil d'Ariane + meta */}
       <div className="flex items-center gap-2 mb-4 flex-wrap">
         {page.category && (
           <>
-            <div className="flex items-center gap-1.5">
-              <Hash size={11} strokeWidth={2} className="text-indigo-400" />
-              <span className="text-[11px] font-semibold text-indigo-400 uppercase tracking-[0.14em]">
-                {page.category.name}
-              </span>
-            </div>
+            <span className="text-xs font-medium text-lime-300">{page.category.name}</span>
             <span className="text-zinc-700 text-xs">/</span>
           </>
         )}
-        <div className="flex items-center gap-1.5">
-          <FileText size={11} strokeWidth={1.75} className="text-zinc-600" />
-          <span className="text-[11px] text-zinc-600 truncate max-w-xs">{page.title}</span>
-        </div>
-        <div className="flex items-center gap-1.5 ml-auto">
-          <Clock size={10} strokeWidth={1.75} className="text-zinc-700" />
-          <span className="text-[10px] text-zinc-700">{readMin} min de lecture</span>
-        </div>
+        <span className="text-xs text-zinc-500 truncate max-w-xs">{page.title}</span>
+        <span className="flex items-center gap-1.5 ml-auto text-[11px] text-zinc-600">
+          <Clock size={11} />
+          {readMin} min de lecture
+        </span>
       </div>
 
-      {/* Title */}
-      <h1 style={{
-        background: "linear-gradient(160deg, #ffffff 20%, rgba(255,255,255,0.5) 100%)",
-        WebkitBackgroundClip: "text",
-        WebkitTextFillColor: "transparent",
-        backgroundClip: "text",
-        fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
-        fontWeight: 800,
-        letterSpacing: "-0.035em",
-        lineHeight: 1.1,
-        marginBottom: "2rem",
-      }}>
+      <h1 className="text-3xl md:text-4xl font-semibold tracking-tighter text-zinc-50 leading-[1.1] mb-8">
         {page.title}
       </h1>
 
-      {/* Gradient divider */}
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.08] to-transparent mb-10" />
+      <div className="h-px w-full bg-white/[0.07] mb-10" />
 
       <MarkdownRenderer content={page.content ?? ""} />
     </>

@@ -2,7 +2,7 @@ import { prisma } from "@/lib/prisma";
 import { MarkdownRenderer } from "@/components/markdown-renderer";
 import NextLink from "next/link";
 import { notFound } from "next/navigation";
-import { ArrowLeft, Clock, BarChart2, Tag as TagIcon } from "lucide-react";
+import { ArrowLeft, Clock } from "@phosphor-icons/react/dist/ssr";
 import type { Metadata } from "next";
 
 interface Props { params: Promise<{ slug: string }> }
@@ -13,12 +13,11 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   return tuto ? { title: tuto.title, description: tuto.excerpt ?? undefined } : { title: "Introuvable" };
 }
 
-const DIFF: Record<string, { label: string; pill: string; bar: string }> = {
-  beginner:     { label: "Débutant",      pill: "text-emerald-300 bg-emerald-500/10 border-emerald-500/25", bar: "from-emerald-500/40 to-emerald-500/5" },
-  intermediate: { label: "Intermédiaire", pill: "text-amber-300   bg-amber-500/10   border-amber-500/25",   bar: "from-amber-500/40   to-amber-500/5" },
-  advanced:     { label: "Avancé",        pill: "text-red-300     bg-red-500/10     border-red-500/25",     bar: "from-red-500/40     to-red-500/5" },
+const DIFFICULTY_LABEL: Record<string, string> = {
+  beginner: "Débutant",
+  intermediate: "Intermédiaire",
+  advanced: "Avancé",
 };
-const FALLBACK = { label: "?", pill: "text-zinc-400 bg-white/[0.04] border-white/[0.07]", bar: "from-zinc-500/30 to-zinc-500/5" };
 
 export default async function TutorialSlugPage({ params }: Props) {
   const { slug } = await params;
@@ -30,34 +29,34 @@ export default async function TutorialSlugPage({ params }: Props) {
   if (!tuto) notFound();
 
   const tags: string[] = JSON.parse(tuto.tags || "[]");
-  const d = DIFF[tuto.difficulty] ?? FALLBACK;
+  const difficulty = DIFFICULTY_LABEL[tuto.difficulty];
   const words = (tuto.content ?? "").split(/\s+/).length;
   const readMin = tuto.duration ?? Math.max(1, Math.round(words / 200));
 
   return (
     <>
-      {/* Mobile back */}
+      {/* Retour mobile */}
       <div className="lg:hidden mb-8">
         <NextLink href="/tutorials"
-          className="inline-flex items-center gap-2 text-xs text-zinc-600 hover:text-zinc-300 transition-colors group">
-          <ArrowLeft size={12} strokeWidth={1.75} className="group-hover:-translate-x-0.5 transition-transform" />
+          className="inline-flex items-center gap-2 text-xs text-zinc-500 hover:text-lime-300 transition-colors group">
+          <ArrowLeft size={12} className="group-hover:-translate-x-0.5 transition-transform" />
           Tutoriels
         </NextLink>
       </div>
 
-      {/* Meta bar */}
+      {/* Barre de meta */}
       <div className="flex items-center gap-3 mb-5 flex-wrap">
-        <span className={`inline-flex items-center gap-1.5 text-[11px] font-semibold px-3 py-1.5 rounded-full border ${d.pill}`}>
-          <BarChart2 size={10} strokeWidth={2} />
-          {d.label}
-        </span>
-        <span className="flex items-center gap-1.5 text-xs text-zinc-600">
-          <Clock size={11} strokeWidth={1.75} />
+        {difficulty && (
+          <span className="text-[11px] font-medium text-lime-300 border border-lime-300/25 px-3 py-1.5 rounded-full">
+            {difficulty}
+          </span>
+        )}
+        <span className="flex items-center gap-1.5 text-xs text-zinc-500">
+          <Clock size={12} />
           {readMin} min de lecture
         </span>
         {tags.length > 0 && (
           <div className="flex items-center gap-1.5 flex-wrap">
-            <TagIcon size={10} strokeWidth={1.75} className="text-zinc-700" />
             {tags.map((tag) => (
               <span key={tag} className="text-[10px] font-medium text-zinc-500 bg-white/[0.04] border border-white/[0.06] px-2 py-0.5 rounded-full">
                 {tag}
@@ -67,30 +66,15 @@ export default async function TutorialSlugPage({ params }: Props) {
         )}
       </div>
 
-      {/* Difficulty accent bar */}
-      <div className={`h-0.5 w-24 rounded-full bg-gradient-to-r ${d.bar} mb-5`} />
-
-      {/* Title */}
-      <h1 style={{
-        background: "linear-gradient(160deg, #ffffff 20%, rgba(255,255,255,0.5) 100%)",
-        WebkitBackgroundClip: "text",
-        WebkitTextFillColor: "transparent",
-        backgroundClip: "text",
-        fontSize: "clamp(1.75rem, 4vw, 2.75rem)",
-        fontWeight: 800,
-        letterSpacing: "-0.035em",
-        lineHeight: 1.1,
-        marginBottom: "1rem",
-      }}>
+      <h1 className="text-3xl md:text-4xl font-semibold tracking-tighter text-zinc-50 leading-[1.1] mb-4">
         {tuto.title}
       </h1>
 
       {tuto.excerpt && (
-        <p className="text-[#6b7280] text-base leading-relaxed mb-8">{tuto.excerpt}</p>
+        <p className="text-zinc-400 leading-relaxed mb-8">{tuto.excerpt}</p>
       )}
 
-      {/* Gradient divider */}
-      <div className="h-px w-full bg-gradient-to-r from-transparent via-white/[0.08] to-transparent mb-10" />
+      <div className="h-px w-full bg-white/[0.07] mb-10" />
 
       <MarkdownRenderer content={tuto.content ?? ""} />
     </>

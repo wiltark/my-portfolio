@@ -3,12 +3,12 @@
 import { useState } from "react";
 import NextLink from "next/link";
 import { usePathname } from "next/navigation";
-import { BookOpen, FileText, GraduationCap, Menu, X, Settings } from "lucide-react";
+import { Article, BookOpen, GraduationCap, List, X, GearSix } from "@phosphor-icons/react";
 
 const navItems = [
-  { label: "Blog",       href: "/blog",      icon: BookOpen },
-  { label: "Docs",       href: "/docs",      icon: FileText },
-  { label: "Tutoriels",  href: "/tutorials", icon: GraduationCap },
+  { label: "Blog",      href: "/blog",      icon: Article },
+  { label: "Docs",      href: "/docs",      icon: BookOpen },
+  { label: "Tutoriels", href: "/tutorials", icon: GraduationCap },
 ];
 
 export function SiteNavbar() {
@@ -17,15 +17,14 @@ export function SiteNavbar() {
 
   return (
     <header className="fixed top-0 inset-x-0 z-50">
-      {/* Backdrop */}
-      <div className="absolute inset-0 bg-[#0a0a0f]/80 backdrop-blur-xl border-b border-white/[0.06]" />
+      <div className="absolute inset-0 bg-[#09090b]/80 backdrop-blur-xl border-b border-white/[0.07]" />
 
-      <div className="relative max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+      <div className="relative max-w-6xl mx-auto px-4 md:px-6 h-16 flex items-center justify-between">
         {/* Brand */}
-        <NextLink href="/" className="flex items-center gap-2.5 group">
-          <div className="w-6 h-6 rounded-md bg-white flex items-center justify-center shadow-[0_0_12px_rgba(255,255,255,0.2)]">
-            <span className="text-[#0a0a0f] font-black text-[11px] tracking-tighter">K</span>
-          </div>
+        <NextLink href="/" className="flex items-center gap-2.5">
+          <span className="w-6 h-6 rounded-md bg-lime-300 flex items-center justify-center">
+            <span className="text-zinc-950 font-bold text-[12px] tracking-tighter">K</span>
+          </span>
           <span className="text-sm font-semibold text-zinc-100 tracking-tight">Karl</span>
         </NextLink>
 
@@ -35,12 +34,12 @@ export function SiteNavbar() {
             const active = pathname.startsWith(href);
             return (
               <NextLink key={href} href={href}
-                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-xl text-sm transition-all duration-150 ${
+                className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full text-sm transition-colors duration-150 ${
                   active
-                    ? "text-zinc-100 bg-white/[0.08]"
-                    : "text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.05]"
+                    ? "text-zinc-50 bg-white/[0.07]"
+                    : "text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.04]"
                 }`}>
-                <Icon size={13} strokeWidth={1.75} />
+                <Icon size={15} />
                 {label}
               </NextLink>
             );
@@ -50,34 +49,34 @@ export function SiteNavbar() {
         {/* Right */}
         <div className="flex items-center gap-1">
           <NextLink href="/admin"
-            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs text-zinc-700 hover:text-zinc-400 hover:bg-white/[0.04] transition-all">
-            <Settings size={12} strokeWidth={1.75} />
+            className="hidden md:flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs text-zinc-600 hover:text-zinc-300 hover:bg-white/[0.04] transition-colors">
+            <GearSix size={13} />
             Admin
           </NextLink>
           <button
-            className="md:hidden w-9 h-9 flex items-center justify-center rounded-xl text-zinc-500 hover:text-zinc-200 hover:bg-white/[0.05] transition-all"
+            className="md:hidden w-9 h-9 flex items-center justify-center rounded-full text-zinc-400 hover:text-zinc-100 hover:bg-white/[0.05] transition-colors"
             onClick={() => setOpen(!open)}
             aria-label="Menu">
-            {open ? <X size={16} strokeWidth={1.75} /> : <Menu size={16} strokeWidth={1.75} />}
+            {open ? <X size={18} /> : <List size={18} />}
           </button>
         </div>
       </div>
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden relative border-t border-white/[0.06] bg-[#0a0a0f]/95 px-4 py-3 space-y-1">
+        <div className="md:hidden relative border-t border-white/[0.07] bg-[#09090b]/95 px-4 py-3 space-y-1">
           {navItems.map(({ label, href, icon: Icon }) => (
             <NextLink key={href} href={href} onClick={() => setOpen(false)}
-              className={`flex items-center gap-3 px-3 py-3 rounded-xl text-sm transition-colors ${
-                pathname.startsWith(href) ? "text-zinc-100 bg-white/[0.07]" : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
+              className={`flex items-center gap-3 px-3 py-3 rounded-2xl text-sm transition-colors ${
+                pathname.startsWith(href) ? "text-zinc-50 bg-white/[0.07]" : "text-zinc-400 hover:text-zinc-200 hover:bg-white/[0.04]"
               }`}>
-              <Icon size={15} strokeWidth={1.75} />
+              <Icon size={16} />
               {label}
             </NextLink>
           ))}
           <NextLink href="/admin" onClick={() => setOpen(false)}
             className="flex items-center gap-3 px-3 py-3 text-xs text-zinc-600 hover:text-zinc-400 transition-colors">
-            <Settings size={13} strokeWidth={1.75} />
+            <GearSix size={14} />
             Admin
           </NextLink>
         </div>

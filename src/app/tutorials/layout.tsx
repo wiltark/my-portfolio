@@ -23,16 +23,16 @@ export default async function TutorialsLayout({ children }: { children: React.Re
     <div className="min-h-screen">
       <SiteNavbar />
 
-      {/* Ambient glow */}
+      {/* Halo d'ambiance */}
       <div aria-hidden className="fixed inset-0 pointer-events-none overflow-hidden">
         <div style={{
           position: "absolute", top: "-10%", left: "50%", transform: "translateX(-50%)",
           width: "800px", height: "600px",
-          background: "radial-gradient(ellipse at 50% 0%, rgba(255,255,255,0.032) 0%, transparent 65%)",
+          background: "radial-gradient(ellipse at 50% 0%, rgba(190,242,100,0.04) 0%, transparent 65%)",
         }} />
       </div>
 
-      <div className="relative max-w-5xl mx-auto px-6 pt-28 pb-24 flex gap-10 items-start">
+      <div className="relative max-w-6xl mx-auto px-4 md:px-6 pt-28 pb-8 flex gap-10 items-start">
         <TutorialsSidebar tutorials={tutorials} />
         <main className="flex-1 min-w-0 pt-6">
           {children}
